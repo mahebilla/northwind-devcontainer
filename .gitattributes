@@ -1,0 +1,24 @@
+# Normalize all text files to LF on commit (cross-platform: Windows dev + Linux container)
+* text=auto eol=lf
+
+# Windows batch/cmd files must keep CRLF to run correctly on Windows
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files — no line ending conversion
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary
+*.zip binary
+*.dll binary
+*.exe binary
+*.pdb binary
+*.nupkg binary
+*.snupkg binary
