@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- MediatR: IRequest<T>, IRequestHandler<T,R> — the core of CQRS dispatch -->
+    <PackageReference Include="MediatR" Version="12.*" />
+    <!-- EF Core: DbSet<T> used in interfaces, LINQ operators in handlers -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NorthwindCqrs.Domain\NorthwindCqrs.Domain.csproj" />
+  </ItemGroup>
+</Project>

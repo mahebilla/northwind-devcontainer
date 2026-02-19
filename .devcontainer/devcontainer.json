@@ -14,10 +14,14 @@
   },
 
   // Forward container ports to your Windows machine so the browser can reach them
-  "forwardPorts": [5009, 5173, 1433],
+  "forwardPorts": [5009, 5010, 5173, 1433],
   "portsAttributes": {
     "5009": {
-      "label": "ASP.NET Core API",
+      "label": "NorthwindApi (EF Core)",
+      "onAutoForward": "notify"
+    },
+    "5010": {
+      "label": "NorthwindCqrs (CQRS)",
       "onAutoForward": "notify"
     },
     "5173": {

@@ -1,6 +1,8 @@
 # ── .NET ──────────────────────────────────────────
 NorthwindApi/bin/
 NorthwindApi/obj/
+NorthwindCqrs/**/bin/
+NorthwindCqrs/**/obj/
 *.user
 .vs/
 

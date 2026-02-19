@@ -42,7 +42,7 @@ echo "  ✓ sqlcmd ready"
 
 # ── Step 4: Restore Northwind database ───────────────────────────────────
 echo ""
-echo "▶ [4/4] Setting up Northwind database..."
+echo "▶ [4/5] Setting up Northwind database..."
 
 SA_PASS="${SA_PASSWORD:-YourStrong!Passw0rd}"
 SQLCMD="/opt/mssql-tools18/bin/sqlcmd"
@@ -82,20 +82,41 @@ else
   echo "  ✓ Northwind database restored."
 fi
 
+# ── Step 5: Create NorthwindRead database (CQRS read models) ─────────────
+echo ""
+echo "▶ [5/5] Setting up NorthwindRead database (CQRS read models)..."
+
+READ_DB_EXISTS=$($SQLCMD -S db,1433 -U sa -P "$SA_PASS" \
+  -Q "SET NOCOUNT ON; SELECT COUNT(*) FROM sys.databases WHERE name='NorthwindRead'" \
+  -C -h -1 2>/dev/null | tr -d ' \r\n')
+
+if [ "$READ_DB_EXISTS" = "1" ]; then
+  echo "  NorthwindRead database already exists — skipping seed."
+else
+  echo "  Creating NorthwindRead database..."
+  $SQLCMD -S db,1433 -U sa -P "$SA_PASS" -Q "CREATE DATABASE NorthwindRead" -C
+  echo "  Seeding read model tables from Northwind..."
+  $SQLCMD -S db,1433 -U sa -P "$SA_PASS" -d NorthwindRead \
+    -i /workspace/.devcontainer/seed-read-db.sql -C
+  echo "  ✓ NorthwindRead database seeded."
+fi
+
 # ── Done ──────────────────────────────────────────────────────────────────
 echo ""
-echo "┌─────────────────────────────────────────────┐"
-echo "│   Setup complete! Container is ready.        │"
-echo "├─────────────────────────────────────────────┤"
-echo "│  Start API:                                  │"
-echo "│    cd /workspace/NorthwindApi                │"
-echo "│    dotnet run                                 │"
-echo "│                                              │"
-echo "│  Start React:                                │"
-echo "│    cd /workspace/northwind-client            │"
-echo "│    npm run dev                               │"
-echo "│                                              │"
-echo "│  API URL:   http://localhost:5009/swagger    │"
-echo "│  React URL: http://localhost:5173            │"
-echo "└─────────────────────────────────────────────┘"
+echo "┌──────────────────────────────────────────────────────────┐"
+echo "│   Setup complete! Container is ready.                     │"
+echo "├──────────────────────────────────────────────────────────┤"
+echo "│  Start NorthwindApi (EF Core):                            │"
+echo "│    cd /workspace/NorthwindApi && dotnet run               │"
+echo "│    → http://localhost:5009/swagger                        │"
+echo "│                                                           │"
+echo "│  Start NorthwindCqrs (CQRS + Clean Architecture):        │"
+echo "│    cd /workspace/NorthwindCqrs/NorthwindCqrs.Api          │"
+echo "│    ASPNETCORE_URLS=http://+:5010 dotnet run               │"
+echo "│    → http://localhost:5010/swagger                        │"
+echo "│                                                           │"
+echo "│  Start React:                                             │"
+echo "│    cd /workspace/northwind-client && npm run dev          │"
+echo "│    → http://localhost:5173                                │"
+echo "└──────────────────────────────────────────────────────────┘"
 echo ""

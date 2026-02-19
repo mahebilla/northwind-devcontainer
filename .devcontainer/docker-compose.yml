@@ -14,6 +14,9 @@ services:
       # Override the Windows SQL Express connection string without touching appsettings.json
       # Double-underscore (__) is how .NET reads nested config from env vars
       ConnectionStrings__NorthwindConnection: "Server=db,1433;Database=Northwind;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;"
+      # ── NorthwindCqrs CQRS project (port 5010) ──────────────────────────
+      ConnectionStrings__NorthwindWriteConnection: "Server=db,1433;Database=Northwind;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;"
+      ConnectionStrings__NorthwindReadConnection: "Server=db,1433;Database=NorthwindRead;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;"
     depends_on:
       - db
 
