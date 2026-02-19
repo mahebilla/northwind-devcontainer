@@ -1,0 +1,53 @@
+{
+  "name": "Northwind EF Core (API + React + SQL)",
+
+  // Multi-container setup: app container + SQL Server sidecar
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+
+  // Add Node 20 LTS into the .NET 8 base container
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
+
+  // Forward container ports to your Windows machine so the browser can reach them
+  "forwardPorts": [5009, 5173, 1433],
+  "portsAttributes": {
+    "5009": {
+      "label": "ASP.NET Core API",
+      "onAutoForward": "notify"
+    },
+    "5173": {
+      "label": "React / Vite Dev Server",
+      "onAutoForward": "openBrowser"
+    },
+    "1433": {
+      "label": "SQL Server",
+      "onAutoForward": "silent"
+    }
+  },
+
+  // Runs once after the container first starts — installs tools + restores Northwind DB
+  "postCreateCommand": "bash /workspace/.devcontainer/post-create.sh",
+
+  "remoteUser": "vscode",
+
+  // VS Code extensions that get installed automatically inside the container
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",       // C# language support + IntelliSense
+        "ms-dotnettools.csdevkit",     // Solution explorer, test runner, hot reload
+        "ms-mssql.mssql",             // Browse SQL Server + run queries from VS Code
+        "dbaeumer.vscode-eslint",     // ESLint for React / TypeScript
+        "esbenp.prettier-vscode"      // Code formatter
+      ],
+      "settings": {
+        "dotnet.defaultSolution": "NorthwindApi.sln"
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+# ── .NET ──────────────────────────────────────────
+NorthwindApi/bin/
+NorthwindApi/obj/
+*.user
+.vs/
+
+# ── React / Node ──────────────────────────────────
+northwind-client/node_modules/
+northwind-client/dist/
+northwind-client/.vite/
+
+# ── Dev Container secrets ─────────────────────────
+.devcontainer/.env        # copy of .env.example with real passwords — never commit
+
+# ── OS / Editor ───────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp

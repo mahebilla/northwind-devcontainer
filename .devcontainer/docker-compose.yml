@@ -1,0 +1,36 @@
+services:
+
+  # ── App container ─────────────────────────────────────────────────────────
+  # .NET 8 SDK + Node 20 (added via devcontainer feature)
+  # Your source code is bind-mounted from Windows into /workspace
+  app:
+    image: mcr.microsoft.com/devcontainers/dotnet:1-8.0
+    volumes:
+      - ..:/workspace:cached          # bind-mount project root into /workspace
+    command: sleep infinity           # keeps container alive; VS Code runs commands inside
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:5009  # API listens on port 5009 (HTTP only in dev)
+      # Override the Windows SQL Express connection string without touching appsettings.json
+      # Double-underscore (__) is how .NET reads nested config from env vars
+      ConnectionStrings__NorthwindConnection: "Server=db,1433;Database=Northwind;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;"
+    depends_on:
+      - db
+
+  # ── SQL Server 2022 sidecar ───────────────────────────────────────────────
+  # Replaces .\SQLEXPRESS on Windows. Data persists in a named Docker volume.
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${SA_PASSWORD:-YourStrong!Passw0rd}"
+      MSSQL_PID: Developer             # free Developer edition
+    ports:
+      - "1433:1433"                    # exposes SQL Server to Windows host (for SSMS / Azure Data Studio)
+    volumes:
+      - sqldata:/var/opt/mssql         # persists database files between container restarts
+
+# Named volume so Northwind data survives container rebuilds
+volumes:
+  sqldata:
