@@ -12,6 +12,9 @@ northwind-client/.vite/
 # ── Dev Container secrets ─────────────────────────
 .devcontainer/.env        # copy of .env.example with real passwords — never commit
 
+# ── Claude Code ───────────────────────────────────
+.claude/
+
 # ── OS / Editor ───────────────────────────────────
 .DS_Store
 Thumbs.db
